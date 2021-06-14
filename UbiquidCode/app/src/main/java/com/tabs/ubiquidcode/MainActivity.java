@@ -57,7 +57,17 @@ public class MainActivity extends AppCompatActivity {
                 }
 
             }
-        }else{
+        }
+        else if(requestCode==100){
+            if (resultCode == CommonStatusCodes.SUCCESS) {
+                if (data != null){
+                    Toast.makeText(this, "Test Barcodes found", Toast.LENGTH_SHORT).show();
+                    //globalViewModel.setBarcode((Barcode) data.getParcelableExtra("barcode"));
+                }
+
+            }
+        }
+        else{
             Toast.makeText(this, "No Barcode found", Toast.LENGTH_SHORT).show();
         }
         super.onActivityResult(requestCode, resultCode, data);

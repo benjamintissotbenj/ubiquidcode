@@ -30,6 +30,9 @@
         <activity android:name=".ScanBarCodeActivity"
             android:label="ScanActivity">
         </activity>
+        <activity android:name=".TestBarCodeActivity"
+            android:label="TestActivity">
+        </activity>
 
     </application>
     <uses-permission android:name="android.permission.CAMERA"/>
