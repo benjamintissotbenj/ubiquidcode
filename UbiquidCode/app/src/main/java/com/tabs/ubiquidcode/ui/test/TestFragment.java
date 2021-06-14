@@ -16,15 +16,15 @@ import com.tabs.ubiquidcode.R;
 
 public class TestFragment extends Fragment {
 
-    private TestViewModel notificationsViewModel;
+    private TestViewModel testViewModel;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        notificationsViewModel =
+        testViewModel =
                 ViewModelProviders.of(this).get(TestViewModel.class);
         View root = inflater.inflate(R.layout.fragment_test, container, false);
-        final TextView textView = root.findViewById(R.id.text_notifications);
-        notificationsViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
+        final TextView textView = root.findViewById(R.id.text_test);
+        testViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
                 textView.setText(s);
