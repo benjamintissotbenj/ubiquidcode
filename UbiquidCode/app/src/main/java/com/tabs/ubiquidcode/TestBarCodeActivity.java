@@ -3,6 +3,7 @@ package com.tabs.ubiquidcode;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.SparseArray;
@@ -64,6 +65,8 @@ public class TestBarCodeActivity extends Activity {
             }
         });
 
+        //SharedPreferences sharedPreferences = getSharedPreferences("name",MODE_PRIVATE);
+
         //when asyncTask is ended :
         /*
         intent.putExtra("barcode",barcodes.valueAt(0)); //last barcode from array
@@ -123,7 +126,16 @@ public class TestBarCodeActivity extends Activity {
 
                         if (!alreadyDetected(barcode)) {
                             detectedCodes.add(barcode);
-                            //count.setText(String.valueOf(detectedCodes.size()));
+                            runOnUiThread(new Runnable() {
+
+                                @Override
+                                public void run() {
+
+                                    // Stuff that updates the UI
+                                    count.setText(String.valueOf(detectedCodes.size()));
+                                }
+                            });
+
                             if (detectedCodes.size() > 3) {
                                 Intent intent = new Intent();
                                 Bundle args = new Bundle();
