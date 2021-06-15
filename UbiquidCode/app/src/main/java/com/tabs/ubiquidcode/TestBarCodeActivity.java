@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.SurfaceHolder;
@@ -53,15 +54,21 @@ public class TestBarCodeActivity extends Activity {
         cameraPreview = (SurfaceView) findViewById(R.id.camera_preview);
         count = findViewById(R.id.compteur);
         startTest = findViewById(R.id.start_test);
+        startTest.setText("Start the test");
         createCameraSource();
         startTest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO: create an async task that waits 15 seconds and then sets this to false
-                //début du test ici, pendant 15 secondes
-                //createCameraSource();
-
                 testing = true;
+                startTest.setText("Test Running");
+                (new Handler()).postDelayed(new Runnable() {
+                    public void run() {
+                        exit();
+                    }
+                }, 15000);
+
+
+
             }
         });
 
@@ -75,6 +82,16 @@ public class TestBarCodeActivity extends Activity {
         */
 
 
+    }
+
+    private void exit(){
+        testing = false;
+        Intent intent = new Intent();
+        Bundle args = new Bundle();
+        args.putSerializable("serializableBarcodes",(Serializable) detectedCodes);
+        intent.putExtra("barcodes", args); //all different detected barcodes
+        setResult(CommonStatusCodes.SUCCESS, intent);
+        finish();
     }
 
 
@@ -123,27 +140,13 @@ public class TestBarCodeActivity extends Activity {
                     final SparseArray<Barcode> barcodes= detections.getDetectedItems();
                     if (barcodes.size()>0) {
                         Barcode barcode = barcodes.valueAt(0);
-
                         if (!alreadyDetected(barcode)) {
                             detectedCodes.add(barcode);
                             runOnUiThread(new Runnable() {
-
                                 @Override
-                                public void run() {
-
-                                    // Stuff that updates the UI
-                                    count.setText(String.valueOf(detectedCodes.size()));
-                                }
+                                public void run() {count.setText(String.valueOf(detectedCodes.size()));}
                             });
 
-                            if (detectedCodes.size() > 3) {
-                                Intent intent = new Intent();
-                                Bundle args = new Bundle();
-                                args.putSerializable("serializableBarcodes",(Serializable) detectedCodes);
-                                intent.putExtra("barcodes", args); //all different detected barcodes
-                                setResult(CommonStatusCodes.SUCCESS, intent);
-                                finish();
-                            }
                         }
                     }
                 }

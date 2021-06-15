@@ -29,7 +29,7 @@ public class TestFragment extends Fragment {
 
     private TestViewModel testViewModel;
     private GlobalViewModel globalViewModel;
-    private TextView[] textviews = new TextView[4];
+    private TextView[] textviews = new TextView[2];
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -45,17 +45,25 @@ public class TestFragment extends Fragment {
                 textView.setText(s);
             }
         });
-        textviews[0] = (TextView) root.findViewById(R.id.test_value_1);
-        textviews[1] = (TextView) root.findViewById(R.id.test_value_2);
-        textviews[2] = (TextView) root.findViewById(R.id.test_value_3);
-        textviews[3] = (TextView) root.findViewById(R.id.test_value_4);
-
+        textviews[0] = (TextView) root.findViewById(R.id.test_number);
+        textviews[1] = (TextView) root.findViewById(R.id.test_efficiency);
+        textView.setText("Veuillez tester l'application");
         globalViewModel.getNumberTested().observe(getActivity(), new Observer<Integer>() {
             @Override
             public void onChanged(Integer integer) {
                 ArrayList<Barcode> barcodes = globalViewModel.getTestBarcodes();
-                for (int i=0;i<min(4,barcodes.size());i++){
-                    textviews[i].setText(barcodes.get(i).displayValue);
+                testViewModel.setText("Diagnostic du test : ");
+                //TODO: give the stats here
+                textviews[0].setText("Vous avez détecté " + barcodes.size() + " codes");
+                if (barcodes.size()>0){
+                    double size = barcodes.size();
+                    double time = 15;
+                    double multiplier = 10;
+                    textviews[1].setText("Efficacité : un toutes les " + Math.floor(time/size*multiplier)/multiplier + " secondes");
+                }
+                else{
+                    textviews[1].setText("Efficacité : il fallait scanner des codes !");
+
                 }
             }
         });
