@@ -13,12 +13,14 @@ public class GlobalViewModel extends ViewModel {
     private MutableLiveData<String> mText;
     private MutableLiveData<Barcode> mBarcode;
     private MutableLiveData<ArrayList<Barcode>> mTestBarcodes;
+    private MutableLiveData<Integer> mNumberTested;
 
     public GlobalViewModel() {
         mText = new MutableLiveData<>();
         mText.setValue("This is scan fragment");
         mBarcode = new MutableLiveData<>();
         mTestBarcodes = new MutableLiveData<>(new ArrayList<Barcode>());
+        mNumberTested = new MutableLiveData<>(Integer.valueOf(0));
     }
 
     public LiveData<String> getText() {
@@ -31,10 +33,14 @@ public class GlobalViewModel extends ViewModel {
         mBarcode.setValue(barcode);
     }
 
-    public void addTestBarcode(Barcode barcode){
-        mTestBarcodes.getValue().add(barcode);
+    public void setTestBarcodes(ArrayList<Barcode> barcodes){
+        mTestBarcodes.setValue(barcodes);
     }
     public ArrayList<Barcode> getTestBarcodes(){
         return mTestBarcodes.getValue();
+    }
+    public void setNumberTested(Integer n){mNumberTested.setValue(n);}
+    public LiveData<Integer> getNumberTested() {
+        return mNumberTested;
     }
 }

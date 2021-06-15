@@ -2,6 +2,7 @@ package com.tabs.ubiquidcode;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.widget.Toast;
 
 import com.google.android.gms.common.api.CommonStatusCodes;
@@ -16,6 +17,8 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -62,7 +65,10 @@ public class MainActivity extends AppCompatActivity {
             if (resultCode == CommonStatusCodes.SUCCESS) {
                 if (data != null){
                     Toast.makeText(this, "Test Barcodes found", Toast.LENGTH_SHORT).show();
-                    //globalViewModel.setBarcode((Barcode) data.getParcelableExtra("barcode"));
+                    Bundle args = data.getBundleExtra("barcodes");
+                    ArrayList<Barcode> barcodes = (ArrayList<Barcode>) args.getSerializable("serializableBarcodes");
+                    globalViewModel.setTestBarcodes(barcodes);
+                    globalViewModel.setNumberTested(Integer.valueOf(barcodes.size()));
                 }
 
             }

@@ -15,15 +15,21 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.google.android.gms.vision.barcode.Barcode;
 import com.tabs.ubiquidcode.GlobalViewModel;
 import com.tabs.ubiquidcode.R;
 import com.tabs.ubiquidcode.ScanBarCodeActivity;
 import com.tabs.ubiquidcode.TestBarCodeActivity;
 
+import org.w3c.dom.Text;
+
+import java.util.ArrayList;
+
 public class TestFragment extends Fragment {
 
     private TestViewModel testViewModel;
     private GlobalViewModel globalViewModel;
+    private TextView[] textviews = new TextView[4];
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -39,6 +45,20 @@ public class TestFragment extends Fragment {
                 textView.setText(s);
             }
         });
+        textviews[0] = (TextView) root.findViewById(R.id.test_value_1);
+        textviews[1] = (TextView) root.findViewById(R.id.test_value_2);
+        textviews[2] = (TextView) root.findViewById(R.id.test_value_3);
+        textviews[3] = (TextView) root.findViewById(R.id.test_value_4);
+
+        globalViewModel.getNumberTested().observe(getActivity(), new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer integer) {
+                ArrayList<Barcode> barcodes = globalViewModel.getTestBarcodes();
+                for (int i=0;i<min(4,barcodes.size());i++){
+                    textviews[i].setText(barcodes.get(i).displayValue);
+                }
+            }
+        });
 
         ((Button) root.findViewById(R.id.start_test_activity)).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -50,5 +70,10 @@ public class TestFragment extends Fragment {
         });
 
         return root;
+    }
+
+    private int min(int a, int b){
+        if (a>b) return b;
+        return a;
     }
 }

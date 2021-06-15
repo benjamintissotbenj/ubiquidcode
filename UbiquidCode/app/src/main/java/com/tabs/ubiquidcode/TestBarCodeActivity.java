@@ -32,6 +32,7 @@ import com.tabs.ubiquidcode.ui.scan.ScanViewModel;
 import org.w3c.dom.Text;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 public class TestBarCodeActivity extends Activity {
@@ -117,31 +118,34 @@ public class TestBarCodeActivity extends Activity {
             public void receiveDetections(Detector.Detections<Barcode> detections) {
                 if (testing) {
                     final SparseArray<Barcode> barcodes= detections.getDetectedItems();
-                    Barcode barcode = barcodes.valueAt(0);
-                    if (!detectedCodes.contains(barcode)){
-                        detectedCodes.add(barcode);
-                        //Toast.makeText(TestBarCodeActivity.this, "Detected a New Code", Toast.LENGTH_SHORT).show();
-                        count.setText(String.valueOf(detectedCodes.size()));
-                        if(detectedCodes.size()>3){
-                            Intent intent = new Intent();
-                            intent.putExtra("barcode",barcodes.valueAt(0)); //last barcode from array
-                            setResult(CommonStatusCodes.SUCCESS,intent);
-                            finish();
+                    if (barcodes.size()>0) {
+                        Barcode barcode = barcodes.valueAt(0);
+
+                        if (!alreadyDetected(barcode)) {
+                            detectedCodes.add(barcode);
+                            //count.setText(String.valueOf(detectedCodes.size()));
+                            if (detectedCodes.size() > 3) {
+                                Intent intent = new Intent();
+                                Bundle args = new Bundle();
+                                args.putSerializable("serializableBarcodes",(Serializable) detectedCodes);
+                                intent.putExtra("barcodes", args); //all different detected barcodes
+                                setResult(CommonStatusCodes.SUCCESS, intent);
+                                finish();
+                            }
                         }
                     }
-                    /*final SparseArray<Barcode> barcodes = detections.getDetectedItems();
-                    if (barcodes.size() > 0 && barcodes.size() <= 10)
-                        Toast.makeText(TestBarCodeActivity.this, "Detected barcode number " +barcodes.size(), Toast.LENGTH_SHORT).show();
-                    if (barcodes.size() > 10) {
-                        Intent intent = new Intent();
-                        intent.putExtra("barcode", barcodes.valueAt(0)); //last barcode from array
-                        setResult(CommonStatusCodes.SUCCESS, intent);
-                        finish();
-                    }*/
                 }
-                //Toast.makeText(TestBarCodeActivity.this, "Currently not testing", Toast.LENGTH_SHORT).show();
             }
         });
 
+    }
+
+
+    protected boolean alreadyDetected(Barcode barcode){
+        String displayValue = barcode.displayValue;
+        for (Barcode barcode1 : detectedCodes){
+            if (barcode1.displayValue.equals(displayValue)) return true;
+        }
+        return false;
     }
 }
