@@ -1,6 +1,6 @@
 TEST TECHNIQUE Ubiquid
 
-AUthor : Benjamin TISSOT
+Author : Benjamin TISSOT
 
 
 Bienvenue sur le dépôt git de ce test technique pour Ubiquid.
