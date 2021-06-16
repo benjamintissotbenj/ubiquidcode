@@ -55,20 +55,11 @@ public class ScanFragment extends Fragment {
             }
         });
         result = (TextView) root.findViewById(R.id.scan_barcode_result);
-        name = (TextView) root.findViewById(R.id.result_name);
-        name.setText("Contains the name of a contact");
-        number = (TextView) root.findViewById(R.id.result_number);
-        number.setText("Contains the number of a contact");
 
         globalViewModel.getBarcode().observe(getActivity(), new Observer<Barcode>() {
             @Override
             public void onChanged(Barcode barcode) {
                 String returnValue = barcode.displayValue;
-                if (barcode.valueFormat == Barcode.CONTACT_INFO){
-                    Barcode.ContactInfo info = barcode.contactInfo;
-                    name.setText(info.name.first+ " " + info.name.last);
-                    number.setText(info.phones[0].number);
-                }
 
                 result.setText("Barcode value : " + returnValue);
             }
